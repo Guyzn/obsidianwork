@@ -7,7 +7,7 @@
     "start": "node server.js",
     "test": "node scripts/smoke-test.cjs",
     "check": "node --check server.js && node --check lib/vault.js && node --check lib/watcher.js && node --check lib/api.js && node --check lib/config.js && node --check lib/writers.js && node --check scripts/smoke-test.cjs",
-    "check:web": "node --check web/js/app.js && node --check web/js/util.js && node --check web/js/md.js && node --check web/js/views/overview.js && node --check web/js/views/captures.js && node --check web/js/views/clients.js && node --check web/js/views/client.js && node --check web/js/views/decisions.js && node --check web/js/views/knowledge.js && node --check web/js/views/note.js && node --check web/js/views/search.js && node --check web/js/views/assets.js && node --check web/js/views/system.js"
+    "check:web": "for f in web/js/app.js web/js/util.js web/js/md.js web/js/views/overview.js web/js/views/captures.js web/js/views/clients.js web/js/views/client.js web/js/views/decisions.js web/js/views/knowledge.js web/js/views/note.js web/js/views/search.js web/js/views/assets.js web/js/views/system.js; do node --input-type=module --check < \"$f\" || exit 1; done"
   },
   "engines": { "node": ">=18" }
 }
