@@ -1,0 +1,9 @@
+# 运行时产物（数据目录在 ~/Library/Application Support/ObsidianWork/，这里兜底）
+*.log
+*.err
+data/
+node_modules/
+.DS_Store
+
+# 内部规划文档（含业务细节，不进公开仓，本地保留）
+docs/规划书.md

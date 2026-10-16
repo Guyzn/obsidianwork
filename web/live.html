@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ObsidianWork · 实时自测台（P1）</title>
+<style>
+  :root {
+    --bg: #0f1116; --panel: #161a22; --line: #242b38; --text: #d7dce6; --dim: #8a93a6;
+    --accent: #a78bfa; --green: #34d399; --red: #f87171; --amber: #fbbf24; --blue: #60a5fa;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font: 13.5px/1.6 -apple-system, "PingFang SC", sans-serif; padding: 18px 20px 40px; }
+  a { color: var(--accent); text-decoration: none; }
+  .head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
+  .head h1 { font-size: 17px; font-weight: 700; letter-spacing: .3px; }
+  .head .badge { font-size: 11px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); border-radius: 99px; padding: 1px 9px; }
+  .meta { color: var(--dim); font-size: 12px; display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+  .meta code { font-family: var(--mono); font-size: 11.5px; color: var(--text); }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); margin-right: 5px; vertical-align: 1px; }
+  .dot.off { background: var(--red); box-shadow: 0 0 8px var(--red); }
+  .banner { display: none; background: color-mix(in srgb, var(--red) 16%, transparent); border: 1px solid color-mix(in srgb, var(--red) 40%, transparent); color: #fecaca; padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; font-size: 12.5px; }
+  .cards { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .card .n { font-size: 22px; font-weight: 700; font-family: var(--mono); }
+  .card .l { font-size: 11px; color: var(--dim); margin-top: 2px; }
+  .card.hot .n { color: var(--amber); }
+  .card.todo .n { color: var(--blue); }
+  .card.dec .n { color: var(--accent); }
+  .grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 14px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .panel h2 { font-size: 12.5px; color: var(--dim); font-weight: 600; padding: 10px 14px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+  .panel h2 small { font-weight: 400; font-family: var(--mono); font-size: 10.5px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent); vertical-align: top; }
+  th { color: var(--dim); font-weight: 500; font-size: 11px; position: sticky; top: 0; background: var(--panel); }
+  tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); cursor: pointer; }
+  td.ss { font-family: var(--mono); font-size: 11px; color: var(--blue); white-space: nowrap; }
+  td.name { max-width: 220px; }
+  td.status { color: var(--dim); font-size: 12px; max-width: 420px; }
+  .chip { display: inline-block; font-size: 10.5px; padding: 0 6px; border-radius: 5px; margin-right: 4px; border: 1px solid; }
+  .chip.todo { color: var(--blue); border-color: color-mix(in srgb, var(--blue) 45%, transparent); }
+  .chip.hot { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 45%, transparent); }
+  .chip.risk { color: var(--red); border-color: color-mix(in srgb, var(--red) 45%, transparent); }
+  .chip.paused, .chip.parked { color: var(--dim); border-color: var(--line); }
+  .chip.done { color: var(--green); border-color: color-mix(in srgb, var(--green) 45%, transparent); }
+  .chip.idle, .chip.changing { color: var(--dim); border-color: var(--line); }
+  .scroll { max-height: calc(100vh - 300px); overflow: auto; }
+  .events { font-family: var(--mono); font-size: 11.5px; padding: 6px 0; }
+  .events .ev { padding: 5px 14px; border-bottom: 1px dashed color-mix(in srgb, var(--line) 55%, transparent); }
+  .events .ev .t { color: var(--dim); margin-right: 8px; }
+  .events .ev .k { color: var(--green); }
+  .events .ev .k.hello { color: var(--accent); }
+  .events .ev .k.ping { color: var(--dim); }
+  .events .ev .path { color: var(--text); }
+  .events .ev .extra { color: var(--dim); }
+  .tools { padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  .tools input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); border-radius: 8px; padding: 7px 10px; font-size: 12.5px; outline: none; }
+  .tools input:focus { border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+  .results .r { padding: 7px 14px; border-bottom: 1px dashed color-mix(in srgb, var(--line) 55%, transparent); cursor: pointer; }
+  .results .r:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+  .results .r .title { font-size: 12.5px; }
+  .results .r .where { font-family: var(--mono); font-size: 10.5px; color: var(--dim); }
+  .results .r .snip { color: var(--dim); font-size: 12px; margin-top: 2px; }
+  .drawer { position: fixed; top: 0; right: -560px; width: 560px; max-width: 92vw; height: 100vh; background: #12151c; border-left: 1px solid var(--line); transition: right .22s ease; z-index: 30; display: flex; flex-direction: column; }
+  .drawer.open { right: 0; }
+  .drawer .dh { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .drawer .dh h3 { font-size: 14px; }
+  .drawer .dh .ops button, .btn { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); border-radius: 7px; padding: 5px 10px; font-size: 12px; cursor: pointer; margin-left: 6px; }
+  .btn:hover, .drawer .dh .ops button:hover { background: color-mix(in srgb, var(--accent) 25%, transparent); }
+  .drawer .db { padding: 14px 18px; overflow: auto; flex: 1; font-size: 12.5px; }
+  .drawer h4 { font-size: 11.5px; color: var(--dim); margin: 12px 0 6px; }
+  .drawer .tl { border-left: 2px solid var(--line); padding-left: 12px; }
+  .drawer .tl .i { margin-bottom: 8px; }
+  .drawer .tl .d { color: var(--blue); font-family: var(--mono); font-size: 11px; }
+  .drawer pre { white-space: pre-wrap; word-break: break-all; font-family: var(--mono); font-size: 11px; color: var(--dim); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; max-height: 260px; overflow: auto; }
+  .close { cursor: pointer; color: var(--dim); font-size: 18px; line-height: 1; }
+  .hint { color: var(--dim); font-size: 11.5px; margin-top: 12px; }
+  .hint b { color: var(--text); }
+  .flash { animation: flash 1.2s ease; }
+  @keyframes flash { 0% { background: color-mix(in srgb, var(--green) 25%, transparent); } 100% { background: transparent; } }
+  @media (max-width: 1100px) { .cards { grid-template-columns: repeat(3, 1fr); } .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="head">
+  <h1>ObsidianWork</h1><span class="badge">P1 · 实时自测台</span>
+  <span style="color:var(--dim);font-size:12px">库：<code id="vaultPath">…</code></span>
+</div>
+<div class="meta">
+  <span id="watchState"><span class="dot"></span>监听中</span>
+  <span>最后事件：<code id="lastEvent">—</code></span>
+  <span>笔记：<code id="notesCount">…</code></span>
+  <span>启动扫描：<code id="scanMs">…</code></span>
+  <span>SSE：<code id="sseState">连接中…</code></span>
+</div>
+<div class="banner" id="banner"></div>
+
+<div class="cards">
+  <div class="card"><div class="n" id="cTotal">—</div><div class="l">客户总数</div></div>
+  <div class="card hot"><div class="n" id="cHot">—</div><div class="l">🔥 火线</div></div>
+  <div class="card todo"><div class="n" id="cTodo">—</div><div class="l">⏰ 待办</div></div>
+  <div class="card dec"><div class="n" id="cDec">—</div><div class="l">待 Guy 裁决</div></div>
+  <div class="card"><div class="n" id="cNotes">—</div><div class="l">库笔记</div></div>
+  <div class="card"><div class="n" id="cAlert">—</div><div class="l">⚠ 风险标记</div></div>
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <h2>客户雷达（点行进详情）<small id="authority"></small></h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>编号</th><th>客户</th><th>标记</th><th>最近活动</th><th>状态</th></tr></thead>
+        <tbody id="clientRows"><tr><td colspan="5" style="color:var(--dim)">加载中…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:14px;min-height:0">
+    <div class="panel">
+      <h2>实时事件流（Obsidian 里改一个字，这里 1 秒内出现）<small id="evCount"></small></h2>
+      <div class="scroll" style="max-height:300px"><div class="events" id="events"></div></div>
+    </div>
+    <div class="panel">
+      <div class="tools"><input id="q" placeholder="全库搜索（内存索引，输入即搜）…"></div>
+      <div class="scroll" style="max-height:280px"><div class="results" id="results"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="hint">提示：这是 P1 实时数据层的自测台。去 Obsidian 或任何编辑器里改一篇库内笔记（保存），本页的<b>事件流</b>与<b>客户数据</b>会实时更新。数据全部来自 <b>只读</b> 索引，不会写库。</div>
+
+<div class="drawer" id="drawer">
+  <div class="dh">
+    <h3 id="dTitle">—</h3>
+    <div class="ops"><span class="close" onclick="closeDrawer()">✕</span></div>
+  </div>
+  <div class="db" id="dBody"></div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const fmtTime = (iso) => iso ? new Date(iso).toLocaleTimeString('zh-CN', { hour12: false }) : '—';
+
+async function fetchJSON(url) {
+  const r = await fetch(url);
+  return r.json();
+}
+
+/* ---------- 数据加载 ---------- */
+let clientsLoaded = false;
+async function loadSummary() {
+  const { ok, data } = await fetchJSON('/api/v3/summary');
+  if (!ok) return;
+  $('vaultPath').textContent = data.vault.root;
+  $('notesCount').textContent = data.notes.count + ' 篇 / ' + (data.notes.fullTextBytes / 1024).toFixed(0) + ' KB';
+  $('scanMs').textContent = data.scanMs + ' ms';
+  $('cTotal').textContent = data.clients.total;
+  $('cHot').textContent = data.clients.hot;
+  $('cTodo').textContent = data.clients.todo;
+  $('cDec').textContent = data.decisions.openCount;
+  $('cNotes').textContent = data.notes.count;
+  $('cAlert').textContent = data.clients.risk;
+  $('authority').textContent = data.indexAuthority ? '索引状态权威 ' + data.indexAuthority : '';
+  renderWatch(data.watch);
+  if (!data.vault.healthy) showBanner('库扫描异常：' + (data.vault.error || '未知'));
+}
+function renderWatch(w) {
+  if (!w) return;
+  const el = $('watchState');
+  if (w.offline) {
+    el.innerHTML = '<span class="dot off"></span>库离线';
+    showBanner('库离线：' + (w.reason || '') + '（将每 10s 自动重试）');
+  } else {
+    el.innerHTML = '<span class="dot"></span>监听中';
+    hideBanner();
+  }
+  if (w.lastEventAt) $('lastEvent').textContent = fmtTime(w.lastEventAt);
+}
+function showBanner(msg) { $('banner').textContent = msg; $('banner').style.display = 'block'; }
+function hideBanner() { $('banner').style.display = 'none'; }
+
+async function loadClients() {
+  const { ok, data } = await fetchJSON('/api/v3/clients');
+  if (!ok) return;
+  const rows = data.clients.map((c) => {
+    const chips = c.flags.map((f) => `<span class="chip ${f.key}">${f.label}</span>`).join('');
+    const days = c.days == null ? '—' : (c.days + ' 天前');
+    const dayCls = c.days != null && c.days >= 14 ? 'style="color:var(--red)"' : c.days != null && c.days >= 7 ? 'style="color:var(--amber)"' : '';
+    return `<tr data-ss="${c.ss || c.file}" class="${clientsLoaded ? '' : 'flash'}">
+      <td class="ss">${c.ss || '—'}</td>
+      <td class="name">${esc(c.name)}${c.country ? `<span style="color:var(--dim);font-size:11px"> · ${esc(c.country)}</span>` : ''}</td>
+      <td>${chips}</td>
+      <td ${dayCls}>${days}<div style="color:var(--dim);font-size:10.5px" class="mono">${c.lastDate || ''}</div></td>
+      <td class="status">${esc((c.status || '').slice(0, 150))}</td>
+    </tr>`;
+  }).join('');
+  $('clientRows').innerHTML = rows || '<tr><td colspan="5" style="color:var(--dim)">无客户数据</td></tr>';
+  clientsLoaded = true;
+}
+const esc = (s) => String(s || '').replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+
+/* ---------- 事件流 ---------- */
+let evCount = 0;
+function pushEvent(kind, text, extra) {
+  evCount++;
+  $('evCount').textContent = evCount + ' 条';
+  const div = document.createElement('div');
+  div.className = 'ev';
+  div.innerHTML = `<span class="t">${new Date().toLocaleTimeString('zh-CN', { hour12: false })}</span><span class="k ${kind}">${kind}</span> <span class="path">${esc(text)}</span>${extra ? ` <span class="extra">${esc(extra)}</span>` : ''}`;
+  const box = $('events');
+  box.prepend(div);
+  while (box.children.length > 120) box.removeChild(box.lastChild);
+}
+
+/* ---------- 详情抽屉 ---------- */
+async function openClient(ssOrFile) {
+  const res = await fetchJSON('/api/v3/clients/' + encodeURIComponent(ssOrFile));
+  if (!res.ok) return;
+  const d = res.data, c = d.client;
+  $('dTitle').textContent = (c.ss ? c.ss + ' · ' : '') + c.name + (c.country ? ' · ' + c.country : '');
+  const tl = d.timeline.map((t) => `<div class="i"><span class="d">${t.date}</span><div>${esc(t.text.replace(/\*\*/g, ''))}</div></div>`).join('') || '<div style="color:var(--dim)">无日期条目</div>';
+  const heads = d.headings.map((h) => `<span style="color:var(--dim)">${esc(h.text)}</span>`).join(' · ');
+  const backs = d.backlinks.map((b) => `<a onclick="openNote('${b.relPath}')">${esc(b.title)}</a>`).join(' · ') || '<span style="color:var(--dim)">无</span>';
+  $('dBody').innerHTML = `
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <button class="btn" onclick="openFile('${d.relPath}','obsidian')">在 Obsidian 打开</button>
+      <button class="btn" onclick="openFile('${d.relPath}','system')">默认程序打开</button>
+    </div>
+    <div style="color:var(--dim);font-size:11.5px;margin-bottom:8px">最近活动：${c.lastDate || '—'} · 档案大小：${(c.bytes / 1024).toFixed(1)} KB</div>
+    <h4>当前状态</h4><div>${esc(c.status)}</div>
+    <h4>节（${d.headings.length}）</h4><div>${heads}</div>
+    <h4>时间线（倒序最近 60 条）</h4><div class="tl">${tl}</div>
+    <h4>反向链接</h4><div>${backs}</div>`;
+  $('drawer').classList.add('open');
+}
+async function openNote(relPath) {
+  const res = await fetchJSON('/api/v3/notes?path=' + encodeURIComponent(relPath));
+  if (!res.ok) return;
+  const n = res.data;
+  $('dTitle').textContent = '📄 ' + n.title;
+  $('dBody').innerHTML = `
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <button class="btn" onclick="openFile('${n.relPath.replace(/\.md$/, '')}.md','obsidian')">在 Obsidian 打开</button>
+    </div>
+    <div style="color:var(--dim);font-size:11.5px;margin-bottom:8px">${n.relPath} · ${(n.size / 1024).toFixed(1)} KB · 反链 ${n.backlinks.length}</div>
+    <h4>大纲</h4><div>${n.headings.map((h) => esc(h.text)).join(' · ') || '—'}</div>
+    <h4>正文（前 4000 字）</h4><pre>${esc((n.text || '').slice(0, 4000))}</pre>`;
+  $('drawer').classList.add('open');
+}
+function closeDrawer() { $('drawer').classList.remove('open'); }
+function openFile(relFile, app) {
+  fetch('/api/v3/open?app=' + app + '&path=' + encodeURIComponent(relFile)).catch(() => {});
+}
+
+/* ---------- 搜索（防抖） ---------- */
+let searchTimer = null;
+$('q').addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(async () => {
+    const q = $('q').value.trim();
+    if (!q) { $('results').innerHTML = ''; return; }
+    const { ok, data } = await fetchJSON('/api/v3/search?q=' + encodeURIComponent(q));
+    if (!ok) return;
+    $('results').innerHTML = data.results.map((r) => `
+      <div class="r" onclick="openNote('${r.relPath}')">
+        <div class="title">${esc(r.title)}</div>
+        <div class="where">${r.relPath} · 命中 ${r.hits} 处 · ${data.ms}ms</div>
+        ${r.snippet ? `<div class="snip">…${esc(r.snippet)}…</div>` : ''}
+      </div>`).join('') || '<div style="padding:10px 14px;color:var(--dim)">无结果</div>';
+  }, 250);
+});
+
+/* ---------- SSE ---------- */
+let es;
+function connectSSE() {
+  es = new EventSource('/api/events');
+  es.onopen = () => { $('sseState').textContent = '已连接'; $('sseState').style.color = 'var(--green)'; };
+  es.onerror = () => { $('sseState').textContent = '重连中…'; $('sseState').style.color = 'var(--red)'; };
+  es.addEventListener('hello', (e) => {
+    const d = JSON.parse(e.data);
+    pushEvent('hello', '已接入实时流 · 库 ' + d.summary.notes.count + ' 篇', '');
+    renderWatch(d.watch);
+  });
+  es.addEventListener('change', (e) => {
+    const d = JSON.parse(e.data);
+    const files = d.paths.join('、');
+    pushEvent('change', files, `重读 ${d.result.reloaded} · ${d.result.ms}ms`);
+    loadClients();
+    loadSummary();
+  });
+  es.addEventListener('ping', (e) => {
+    const d = JSON.parse(e.data);
+    renderWatch(d.watch);
+  });
+}
+
+/* ---------- 行点击 ---------- */
+$('clientRows').addEventListener('click', (e) => {
+  const tr = e.target.closest('tr');
+  if (!tr || !tr.dataset.ss) return;
+  openClient(tr.dataset.ss);
+});
+
+/* ---------- 启动 ---------- */
+loadSummary().then(loadClients);
+connectSSE();
+setInterval(loadSummary, 60000);
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2560 640">
+  <defs>
+    <linearGradient id="obsidian" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9A8CFF"/>
+      <stop offset=".45" stop-color="#5B45E0"/>
+      <stop offset="1" stop-color="#1E1445"/>
+    </linearGradient>
+    <linearGradient id="facetL" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity=".38"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="syncGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#C9BEFF"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#14102E"/>
+      <stop offset="1" stop-color="#1D1548"/>
+    </linearGradient>
+    <linearGradient id="wordmark" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#B9ABFF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="2560" height="640" rx="56" fill="url(#bg)"/>
+  <!-- 背景装饰：右侧淡淡晶体线框 -->
+  <g fill="none" stroke="#9A8CFF" stroke-opacity=".10" stroke-width="6">
+    <path d="M2280 60 L2440 170 L2400 420 L2280 500 L2160 420 L2120 170 Z"/>
+    <path d="M2020 220 L2110 280 L2090 430 L2020 475 L1950 430 L1930 280 Z"/>
+  </g>
+
+  <!-- 图标（按 512 等比缩放至 384，置于左侧） -->
+  <g transform="translate(120,128) scale(0.75)">
+    <rect x="8" y="8" width="496" height="496" rx="112" fill="#0D0A20"/>
+    <rect x="8" y="8" width="496" height="496" rx="112" fill="none" stroke="#9A8CFF" stroke-opacity=".25" stroke-width="4"/>
+    <path d="M256 52 L396 158 L362 372 L256 436 L150 372 L116 158 Z" fill="url(#obsidian)"/>
+    <path d="M256 52 L116 158 L256 196 Z" fill="url(#facetL)"/>
+    <path d="M256 52 L396 158 L256 196 Z" fill="#FFFFFF" opacity=".08"/>
+    <path d="M256 52 L256 436 L240 372 L234 170 Z" fill="#FFFFFF" opacity=".05"/>
+    <path d="M256 196 L396 158 L362 372 L256 436 Z" fill="#0B0722" opacity=".38"/>
+    <g fill="none" stroke="url(#syncGrad)" stroke-width="30" stroke-linecap="round">
+      <path d="M 193.6 206 A 72 72 0 0 1 318.4 206"/>
+      <path d="M 318.4 278 A 72 72 0 0 1 193.6 278"/>
+    </g>
+    <path d="M 338.4 240.6 L 292.2 202.6 L 328.6 181.6 Z" fill="url(#syncGrad)"/>
+    <path d="M 173.6 243.4 L 219.8 281.4 L 183.4 302.4 Z" fill="url(#syncGrad)"/>
+    <line x1="170" y1="462" x2="342" y2="462" stroke="#9A8CFF" stroke-width="16" stroke-linecap="round"/>
+  </g>
+
+  <!-- 字标 + 标语 -->
+  <text x="600" y="316" font-family="-apple-system, 'SF Pro Display', 'PingFang SC', 'Helvetica Neue', sans-serif" font-size="132" font-weight="700" letter-spacing="2" fill="url(#wordmark)">Obsidian<tspan fill="#9A8CFF">Work</tspan></text>
+  <text x="606" y="416" font-family="-apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif" font-size="48" font-weight="400" letter-spacing="6" fill="#8F86C4">机械盘也能稳定跑的 Obsidian 实时工作台</text>
+</svg>
