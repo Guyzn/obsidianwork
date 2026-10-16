@@ -35,7 +35,7 @@ Your vault is the database. Obsidian is the editor. ObsidianWork is the workbenc
 ## Quick Start (macOS, 30 seconds)
 
 ```bash
-git clone https://github.com/<you>/obsidianwork.git
+git clone https://github.com/Guyzn/obsidianwork.git
 cd obsidianwork
 ./scripts/install-macos.sh
 ```
