@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/banner-2560.png" alt="ObsidianWork Banner" width="100%">
+  <img src="assets/banner-2560.png" alt="ObsidianWork Banner" width="100%">
 </p>
 
 # ObsidianWork
@@ -116,8 +116,9 @@ obsidianwork/
 ├── lib/toolbox.js       Skill toolbox (config-driven)
 ├── web/                 Multi-page workbench (vanilla ES modules, no build step)
 ├── demo-vault/          Fictional sample vault (14 notes, all structures covered)
-├── scripts/             install-macos.sh / uninstall-macos.sh
-└── docs/assets/         Logo & banner (SVG sources + PNG)
+├── scripts/             install-macos.sh / uninstall-macos.sh / smoke-test.cjs
+│                       generate-icon.py / generate-banner.py (rebrand assets)
+└── assets/              App icon (.icns + SVG) & README banner
 ```
 
 ## Uninstall

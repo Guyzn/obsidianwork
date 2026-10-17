@@ -15,6 +15,7 @@
 | `../web/apple-touch-icon.png` | iOS 主屏（180px） |
 | `../web/icon-192.png` `icon-512.png` | PWA / Android |
 | `../web/app-icon.svg` | 侧栏品牌标记（= `icon-tiny.svg`） |
+| `banner.svg` / `banner-2560.png` | README 横幅，与图标同色板同网格 |
 
 ## 设计参数
 
@@ -45,11 +46,17 @@
 改 `icon.svg` 里 `<defs>` 的两个渐变 stop 和标记 `fill` 即可，其余不用动。
 想整体换成 Obsidian 紫晶系，直接用 `icon-alt-amethyst.svg` 顶替 `icon.svg` 再重跑管线。
 
+## 横幅
+
+`banner.svg` 与 `banner-2560.png` 由 `scripts/generate-banner.py` 生成，内联展开 `icon.svg` 的
+`<defs>` 与绘制内容，所以改图标配色后重跑一次横幅脚本即可同步。版面：纸面 + 24px 米字稿纸，
+上下 10px 硬墨规，左侧图标配墨色装裱框与硬阴影，右侧 Georgia 衬线刊名 + 宋体副题 + 等宽元信息。
+
 ## 重新生成
 
 ```bash
 # 依赖：rsvg-convert（librsvg）、iconutil（macOS 自带）
-/Users/songshunsteel/.workbuddy/binaries/python/versions/3.13.12/bin/python3 /tmp/gen-icon.py
+python3 scripts/generate-icon.py
 ```
 
 脚本会重新测量 Obsidian 墨盒、重建 squircle、导出全尺寸 PNG、打成 `.icns`、

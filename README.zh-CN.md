@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/banner-2560.png" alt="ObsidianWork Banner" width="100%">
+  <img src="assets/banner-2560.png" alt="ObsidianWork Banner" width="100%">
 </p>
 
 # ObsidianWork
@@ -60,11 +60,12 @@ ObsidianWork/
 ├── web/vendor/        marked.min.js v12.0.2（MIT，固定版本入仓，无外部 CDN）
 ├── web/live.html      P1 实时自测台（保留，/live.html 直达）
 ├── demo-vault/        虚构演示库（14 篇，覆盖全部结构，开箱即跑）
-├── scripts/           install-macos.sh 安装器 / uninstall-macos.sh 卸载器
+├── scripts/           install-macos.sh 安装器 / uninstall-macos.sh 卸载器 / smoke-test.cjs
+│                       generate-icon.py / generate-banner.py（重新生成品牌资产）
 ├── launcher.sh        Node 动态解析启动器（防版本升级断裂）
 ├── ObsidianWork.command  双击启动器
 ├── LICENSE            MIT
-└── docs/assets/       LOGO 与横幅（logo.svg 源文件 + logo-1024.png / banner-2560.png）
+└── assets/            应用图标（icon.icns + SVG 源）与 README 横幅
 ```
 
 ## 写回安全机制（P2/P3）
