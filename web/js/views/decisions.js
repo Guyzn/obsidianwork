@@ -47,7 +47,7 @@ export const decisions = {
       </div>
 
       <div class="panel">
-        <h2>⚠️ 待 Guy 裁决 <small>${esc(d.sectionTitle || '')} · 共 ${d.openCount} 项</small>
+        <h2>// 待 Guy 裁决 <small>${esc(d.sectionTitle || '')} · 共 ${d.openCount} 项</small>
           <a class="h2link" href="#/notes/${encodeURIComponent(relPath)}">索引原文 →</a></h2>
         <div class="dec-list">
           ${d.open.map((x) => itemCard(x, relPath)).join('') || '<div class="dim list-pad">没有待裁决项 · 全部拍完</div>'}

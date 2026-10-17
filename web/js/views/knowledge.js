@@ -2,7 +2,7 @@
 import { $, esc, api, fmtDT } from '../util.js';
 import { toast, modal } from '../app.js';
 
-const EMOJI = { '产品知识': '🔩', '业务流程': '📋', '客户沟通': '💬', '行业参考': '🚢', '风控案例': '⚠️' };
+const GLYPH = { '产品知识': '⌗', '业务流程': '⌗', '客户沟通': '⌗', '行业参考': '⌗', '风控案例': '⌗' };
 
 function noteRow(n) {
   return `<a class="row-item slim" href="#/notes/${encodeURIComponent(n.relPath)}">
@@ -16,7 +16,7 @@ function noteRow(n) {
 
 function sectionPanel(sec) {
   return `<div class="panel k-panel">
-    <h2>${EMOJI[sec.folder] || '📁'} ${esc(sec.folder)} <small>${sec.notes.length} 篇</small></h2>
+    <h2>${GLYPH[sec.folder] || '⌗'} ${esc(sec.folder)} <small>${sec.notes.length} 篇</small></h2>
     <div class="list-pad k-list">${sec.notes.map(noteRow).join('')}</div>
   </div>`;
 }

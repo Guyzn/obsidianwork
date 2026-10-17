@@ -48,11 +48,11 @@ export const assets = {
       </div>
 
       <div class="panel">
-        <h2>📁 客户文件区 <small>customers/ · 只读 · 不搬进库</small></h2>
+        <h2>// 客户文件区 <small>customers/ · 只读 · 不搬进库</small></h2>
         <div class="list-pad">
           ${d.customers.folders.map((f) => `
             <div class="asset-row">
-              <span class="asset-icon">📁</span>
+              <span class="asset-icon">▸</span>
               <span class="asset-name">${esc(f.name)}</span>
               <span class="asset-size dim">${f.files} 个文件</span>
               <span class="asset-date dim">${fmtDT(f.mtimeMs)}</span>

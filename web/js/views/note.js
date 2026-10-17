@@ -47,12 +47,12 @@ export const note = {
       <div class="grid2 reader-grid">
         <div class="panel md-panel"><div class="md-body" id="mdBody">${html}</div></div>
         <div class="col">
-          <div class="panel"><h2>🗂 大纲 <small>${headings.filter((h) => h.level <= 3).length}</small></h2>
+          <div class="panel"><h2>// 大纲 <small>${headings.filter((h) => h.level <= 3).length}</small></h2>
             <div class="outline" id="outline">
               ${headings.filter((h) => h.level <= 3).map((h) => `<a class="ol-item lv${h.level}" data-h="${esc(h.id)}" title="${esc(h.text)}">${esc(h.text)}</a>`).join('') || '<div class="dim list-pad">无标题层级</div>'}
             </div>
           </div>
-          <div class="panel"><h2>🔗 反向链接 <small>${n.backlinks.length}</small></h2>
+          <div class="panel"><h2>// 反向链接 <small>${n.backlinks.length}</small></h2>
             <div class="list-pad">${n.backlinks.map((b) => `
               <a class="row-item slim" href="#/notes/${encodeURIComponent(b.relPath)}">
                 <span class="ri-main"><span class="ri-name">${esc(b.title)}</span><span class="ri-sub">${esc(b.relPath)}</span></span>

@@ -194,8 +194,41 @@ export function modal({ title, body, confirmLabel = '确认', cancelLabel = '取
   });
 }
 
+/* ---------------- 主题三态切换：auto / light / dark ----------------
+   只写 data-theme 属性，色彩全部由 CSS 变量 + 媒体查询接管；
+   选择持久化于 localStorage，<head> 内联脚本负责绘制前恢复，避免白闪/墨闪。 */
+function initThemeSelector() {
+  const selector = $('#theme-selector');
+  if (!selector) return;
+  const buttons = selector.querySelectorAll('.seg-btn');
+  const root = document.documentElement;
+
+  function applyTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    buttons.forEach((b) => b.classList.toggle('active', b.getAttribute('data-theme') === theme));
+    try { localStorage.setItem('ow-theme', theme); } catch (e) { /* ignore */ }
+  }
+
+  const current = root.getAttribute('data-theme') || 'auto';
+  buttons.forEach((b) => b.classList.toggle('active', b.getAttribute('data-theme') === current));
+  buttons.forEach((btn) => btn.addEventListener('click', () => applyTheme(btn.getAttribute('data-theme'))));
+}
+
+/* ---------------- 稿纸网格开关 ---------------- */
+function initGridToggle() {
+  const btn = $('#btnGridToggle');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const enabled = document.body.classList.toggle('manuscript-grid');
+    btn.classList.toggle('active', enabled);
+    btn.textContent = enabled ? '稿纸 ON' : '稿纸 OFF';
+  });
+}
+
 /* ---------------- 启动 ---------------- */
 $('#btnReload').onclick = () => renderRoute(true);
+initThemeSelector();
+initGridToggle();
 renderRoute();
 connectSSE();
 $('#sideVault').title = '';

@@ -161,7 +161,7 @@ export const client = {
           ${d.relPath ? `<button class="btn" id="btnObs">在 Obsidian 打开</button>
           <button class="btn ghost" id="btnSys">默认程序打开</button>` : ''}
           <button class="btn ghost" id="btnCopy">复制摘要</button>
-          ${(d.workspaceDirs || []).map((w) => `<button class="btn ghost ws-dir" data-rel="${esc(w.rel)}">📁 ${esc(w.name)}</button>`).join('')}
+          ${(d.workspaceDirs || []).map((w) => `<button class="btn ghost ws-dir" data-rel="${esc(w.rel)}">▸ ${esc(w.name)}</button>`).join('')}
         </div>
       </div>
 

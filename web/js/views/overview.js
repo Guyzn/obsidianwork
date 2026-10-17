@@ -28,34 +28,34 @@ export const overview = {
     el.innerHTML = `
       <div class="cards" id="ovCards">
         <div class="card"><div class="n" id="ovTotal">—</div><div class="l">客户总数</div></div>
-        <div class="card hot"><div class="n" id="ovHot">—</div><div class="l">🔥 火线</div></div>
+        <div class="card hot"><div class="n" id="ovHot">—</div><div class="l">※ 火线</div></div>
         <div class="card todo"><div class="n" id="ovTodo">—</div><div class="l">⏰ 待办</div></div>
-        <div class="card risk"><div class="n" id="ovRisk">—</div><div class="l">⚠ 风险</div></div>
+        <div class="card risk"><div class="n" id="ovRisk">—</div><div class="l">※ 风险</div></div>
         <div class="card dec"><div class="n" id="ovDec">—</div><div class="l">待 Guy 裁决</div></div>
         <div class="card"><div class="n" id="ovToday">—</div><div class="l">今日动态</div></div>
       </div>
       <div class="grid2">
         <div class="col">
           <div class="panel">
-            <h2>✎ 待办 <small id="ovCapSub"></small><a class="h2link" href="#/captures">去便签页 →</a></h2>
+            <h2>// 待办 <small id="ovCapSub"></small><a class="h2link" href="#/captures">去便签页 →</a></h2>
             <div id="ovCaptures" class="list-pad"><div class="dim">加载中…</div></div>
           </div>
           <div class="panel">
-            <h2>⏳ 超期关注 <small id="ovFocusSub"></small><a class="h2link" href="#/clients">全部客户 →</a></h2>
+            <h2>// 超期关注 <small id="ovFocusSub"></small><a class="h2link" href="#/clients">全部客户 →</a></h2>
             <div id="ovFocus" class="list-pad"><div class="dim">加载中…</div></div>
           </div>
           <div class="panel">
-            <h2>⚖ 待 Guy 裁决 <small id="ovDecSub"></small></h2>
+            <h2>// 待 Guy 裁决 <small id="ovDecSub"></small></h2>
             <div id="ovDecList" class="list-pad"><div class="dim">加载中…</div></div>
           </div>
         </div>
         <div class="col">
           <div class="panel">
-            <h2>📡 实时动态 <small>Obsidian 里改一个字，这里 1 秒内出现</small></h2>
+            <h2>// 实时动态 <small>Obsidian 里改一个字，这里 1 秒内出现</small></h2>
             <div id="ovFeed" class="feed"><div class="dim list-pad">加载中…</div></div>
           </div>
           <div class="panel">
-            <h2>🕘 最近打开</h2>
+            <h2>// 最近打开</h2>
             <div id="ovRecent" class="list-pad"></div>
           </div>
         </div>

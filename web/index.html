@@ -1,20 +1,46 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="auto">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ObsidianWork · 本地业务工作台</title>
-<link rel="icon" href="data:,">
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
+<link rel="icon" href="favicon-16.png" type="image/png" sizes="16x16" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<!-- 主题防闪烁：绘制前恢复上次选择，默认跟随系统 -->
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem("ow-theme");
+      if (t === "light" || t === "dark" || t === "auto") {
+        document.documentElement.setAttribute("data-theme", t);
+      }
+    } catch (e) {}
+  })();
+</script>
 <link rel="stylesheet" href="css/app.css">
 </head>
-<body>
+<body class="manuscript-grid">
+<!-- 纸张噪点覆层（SVG feTurbulence，零外部位图） -->
+<svg class="noise-overlay" aria-hidden="true">
+  <filter id="ow-paper-noise">
+    <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch" />
+    <feColorMatrix type="saturate" values="0" />
+  </filter>
+  <rect width="100%" height="100%" filter="url(#ow-paper-noise)" />
+</svg>
+
 <div class="shell">
   <aside class="sidebar">
     <div class="brand">
-      <div class="logo">◈</div>
+      <div class="logo" aria-hidden="true">
+        <!-- 应用图标：Obsidian 三瓣花形基底 + 品牌重着色（assets/icon.svg） -->
+        <img src="app-icon.svg" alt="" width="26" height="26" />
+      </div>
       <div>
-        <div class="name">ObsidianWork</div>
-        <div class="sub">本地业务工作台 <span class="ver">P4</span></div>
+        <div class="name">ObsidianWork<span class="ver">P4</span></div>
+        <div class="sub">本地业务工作台</div>
       </div>
     </div>
     <nav id="nav"></nav>
@@ -30,6 +56,13 @@
         <div class="crumb" id="pageSub">—</div>
       </div>
       <div class="top-actions">
+        <div class="seg-control" id="theme-selector" title="纸面 / 墨夜 / 跟随系统">
+          <span class="seg-label">主题:</span>
+          <button type="button" class="seg-btn active" data-theme="auto">跟随系统</button>
+          <button type="button" class="seg-btn" data-theme="light">纸面</button>
+          <button type="button" class="seg-btn" data-theme="dark">墨夜</button>
+        </div>
+        <button type="button" id="btnGridToggle" class="retro-btn active" title="切换背景米字格稿纸网格">稿纸 ON</button>
         <span class="sync-chip" id="syncChip">已同步</span>
         <span class="sse-mini" id="sseMini" title="实时连接"></span>
         <button class="btn ghost" id="btnReload" title="刷新当前页">↻ 刷新</button>

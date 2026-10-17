@@ -5,8 +5,8 @@ import { flashSync } from '../app.js';
 const FILTERS = [
   { key: 'all', label: '全部' },
   { key: 'todo', label: '⏰ 待办' },
-  { key: 'hot', label: '🔥 火线' },
-  { key: 'risk', label: '⚠ 风险' },
+  { key: 'hot', label: '火线' },
+  { key: 'risk', label: '风险' },
   { key: 'paused', label: '⏸ 挂起' },
   { key: 'done', label: '✅ 闭环' },
   { key: 'plain', label: '无标记' },
